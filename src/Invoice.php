@@ -16,6 +16,7 @@ class Invoice implements XmlSerializable
     private $copyIndicator;
     private $issueDate;
     private $invoiceTypeCode = InvoiceTypeCode::INVOICE;
+    private $invoiceTypeCodeName;
     private $note;
     private $taxPointDate;
     private $dueDate;
@@ -25,10 +26,12 @@ class Invoice implements XmlSerializable
     private $supplierAssignedAccountID;
     private $paymentMeans;
     private $taxTotal;
+    private $taxTotals;
     private $legalMonetaryTotal;
     private $invoiceLines;
     private $allowanceCharges;
     private $additionalDocumentReference;
+    private $additionalDocumentReferences;
     private $documentCurrencyCode = 'EUR';
     private $buyerReference;
     private $accountingCostCode;
@@ -36,6 +39,9 @@ class Invoice implements XmlSerializable
     private $delivery;
     private $orderReference;
     private $contractDocumentReference;
+    private $taxCurrencyCode = 'SAR';
+    private $UUID;
+    private $profileID = 'reporting:1.0';
 
     /**
      * @return string
@@ -149,6 +155,16 @@ class Invoice implements XmlSerializable
     }
 
     /**
+     * @param mixed $currencyCode
+     * @return Invoice
+     */
+    public function setTaxCurrencyCode(string $currencyCode = 'SAR'): Invoice
+    {
+        $this->taxCurrencyCode = $currencyCode;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getInvoiceTypeCode(): ?string
@@ -161,9 +177,12 @@ class Invoice implements XmlSerializable
      * See also: src/InvoiceTypeCode.php
      * @return Invoice
      */
-    public function setInvoiceTypeCode(string $invoiceTypeCode): Invoice
+    public function setInvoiceTypeCode(string $invoiceTypeCode, $attributes = null): Invoice
     {
         $this->invoiceTypeCode = $invoiceTypeCode;
+        if (isset($attributes)) {
+            $this->invoiceTypeCodeName = $attributes;
+        }
         return $this;
     }
 
@@ -311,6 +330,12 @@ class Invoice implements XmlSerializable
         return $this;
     }
 
+    public function addTaxTotal(TaxTotal $taxTotal): Invoice
+    {
+        $this->taxTotals[] = $taxTotal;
+        return $this;
+    }
+
     /**
      * @return LegalMonetaryTotal
      */
@@ -380,6 +405,16 @@ class Invoice implements XmlSerializable
     public function setAdditionalDocumentReference(AdditionalDocumentReference $additionalDocumentReference): Invoice
     {
         $this->additionalDocumentReference = $additionalDocumentReference;
+        return $this;
+    }
+
+    /**
+     * @param AdditionalDocumentReference $additionalDocumentReference
+     * @return Invoice
+     */
+    public function addAdditionalDocumentReference(AdditionalDocumentReference $doc): Invoice
+    {
+        $this->additionalDocumentReferences[] = $doc;
         return $this;
     }
 
@@ -492,6 +527,34 @@ class Invoice implements XmlSerializable
     }
 
     /**
+     * @return UUID
+     */
+    public function getUUID(): ?Invoice
+    {
+        return $this->attachment;
+    }
+
+    /**
+     * @param String $UUID
+     * @return Invoice
+     */
+    public function setUUID(String $UUID): Invoice
+    {
+        $this->UUID = $UUID;
+        return $this;
+    }
+
+    /**
+     * @param String $profileID
+     * @return Invoice
+     */
+    public function setProfileID(String $profileID): Invoice
+    {
+        $this->profileID = $profileID;
+        return $this;
+    }
+
+    /**
      * The validate function that is called during xml writing to valid the data of the object.
      *
      * @return void
@@ -561,7 +624,9 @@ class Invoice implements XmlSerializable
 
         if ($this->invoiceTypeCode !== null) {
             $writer->write([
-                Schema::CBC . 'InvoiceTypeCode' => $this->invoiceTypeCode
+                'name' => Schema::CBC . 'InvoiceTypeCode',
+                'value' => $this->invoiceTypeCode,
+                'attributes' => $this->invoiceTypeCodeName,
             ]);
         }
 
@@ -665,6 +730,31 @@ class Invoice implements XmlSerializable
             ]);
         }
 
+        if($this->taxTotals !== null) {
+            foreach ($this->taxTotals as $txTotal) {
+                $writer->write([
+                    Schema::CAC . 'TaxTotal' => $txTotal]);
+            }
+        }
+
+        if ($this->UUID !== null) {
+            $writer->write([
+                Schema::CBC . 'UUID' => $this->UUID
+            ]);
+        }
+
+        if ($this->taxCurrencyCode !== null) {
+            $writer->write([
+                Schema::CBC . 'TaxCurrencyCode' => $this->taxCurrencyCode
+            ]);
+        }
+
+        if ($this->profileID !== null) {
+            $writer->write([
+                Schema::CBC . 'ProfileID' => $this->profileID
+            ]);
+        }
+
         $writer->write([
             Schema::CAC . 'LegalMonetaryTotal' => $this->legalMonetaryTotal
         ]);
@@ -673,6 +763,13 @@ class Invoice implements XmlSerializable
             $writer->write([
                 Schema::CAC . 'InvoiceLine' => $invoiceLine
             ]);
+        }
+
+        if($this->additionalDocumentReferences !== null) {
+            foreach ($this->additionalDocumentReferences as $docReference) {
+                $writer->write([
+                    Schema::CAC . 'AdditionalDocumentReference' => $docReference]);
+            }
         }
     }
 }

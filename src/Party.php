@@ -9,6 +9,7 @@ class Party implements XmlSerializable
 {
     private $name;
     private $partyIdentificationId;
+    private $partyIdentificationSchemeId;
     private $postalAddress;
     private $physicalLocation;
     private $contact;
@@ -48,6 +49,16 @@ class Party implements XmlSerializable
     public function setPartyIdentificationId(?string $partyIdentificationId): Party
     {
         $this->partyIdentificationId = $partyIdentificationId;
+        return $this;
+    }
+
+    /**
+     * @param string $partyIdentificationSchemeId
+     * @return Party
+     */
+    public function setPartyIdentificationSchemeId(?string $partyIdentificationSchemeId): Party
+    {
+        $this->partyIdentificationSchemeId = $partyIdentificationSchemeId;
         return $this;
     }
 
@@ -152,7 +163,11 @@ class Party implements XmlSerializable
         if ($this->partyIdentificationId !== null) {
             $writer->write([
                 Schema::CAC . 'PartyIdentification' => [
-                    Schema::CBC . 'ID' => $this->partyIdentificationId
+                    'name' => Schema::CBC . 'ID',
+                    'value' => $this->partyIdentificationId,
+                    'attributes' => [
+                        'schemeID' => $this->partyIdentificationSchemeId ?? 'OTH'
+                    ]
                 ],
             ]);
         }
