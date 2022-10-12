@@ -1,5 +1,5 @@
 {
-    "name": "num-num/ubl-invoice",
+    "name": "marwan2/ubl-invoice",
     "description": "A modern object-oriented PHP library to create valid UBL files",
     "keywords": [
         "ubl",
@@ -12,13 +12,12 @@
         "xml",
         "xml invoice"
     ],
-    "homepage": "https://github.com/num-num/ubl-invoice",
+    "homepage": "https://github.com/marwan2/ubl-invoice",
     "license": "MIT",
     "authors": [
         {
-            "name": "Bert Devriese",
-            "email": "bert@numnum.be",
-            "homepage": "https://www.numnum.be",
+            "name": "Marwan Nabil",
+            "email": "marwan12c@gmail.com",
             "role": "Developer"
         }
     ],

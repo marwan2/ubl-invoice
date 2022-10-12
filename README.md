@@ -1,6 +1,6 @@
 # UBL-Invoice
 
-A modern object-oriented PHP library to create valid UBL files. Please feel free to [contribute](https://github.com/num-num/ubl-invoice/pulls) if you are missing features or tags.
+A modern object-oriented PHP library to create valid UBL files. Please feel free to [contribute](https://github.com/marwan2/ubl-invoice/pulls) if you are missing features or tags.
 
 ## Installation and usage
 
