@@ -15,6 +15,7 @@ class Invoice implements XmlSerializable
     private $id;
     private $copyIndicator;
     private $issueDate;
+    private $issueTime;
     private $invoiceTypeCode = InvoiceTypeCode::INVOICE;
     private $invoiceTypeCodeName;
     private $note;
@@ -42,6 +43,8 @@ class Invoice implements XmlSerializable
     private $taxCurrencyCode = 'SAR';
     private $UUID;
     private $profileID = 'reporting:1.0';
+    private $extensions;
+    private $signature;
 
     /**
      * @return string
@@ -123,6 +126,24 @@ class Invoice implements XmlSerializable
     public function setIssueDate(DateTime $issueDate): Invoice
     {
         $this->issueDate = $issueDate;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getIssueTime(): ?DateTime
+    {
+        return $this->issueTime;
+    }
+
+    /**
+     * @param DateTime $issueTime
+     * @return Invoice
+     */
+    public function setIssueTime(DateTime $issueTime): Invoice
+    {
+        $this->issueTime = $issueTime;
         return $this;
     }
 
@@ -555,6 +576,26 @@ class Invoice implements XmlSerializable
     }
 
     /**
+     * @param UBLExtensions $extensions
+     * @return Invoice
+     */
+    public function setExtensions(Extensions\UBLExtensions $extensions): Invoice
+    {
+        $this->extensions = $extensions;
+        return $this;
+    }
+
+    /**
+     * @param Signature $signature
+     * @return Invoice
+     */
+    public function setSignature(Signature $signature): Invoice
+    {
+        $this->signature = $signature;
+        return $this;
+    }
+
+    /**
      * The validate function that is called during xml writing to valid the data of the object.
      *
      * @return void
@@ -600,11 +641,29 @@ class Invoice implements XmlSerializable
     {
         $this->validate();
 
+        if ($this->extensions !== null) {
+            $writer->write([
+                Schema::EXT . 'Extensions' => $this->extensions
+            ]);
+        }
+
+        if ($this->profileID !== null) {
+            $writer->write([
+                Schema::CBC . 'ProfileID' => $this->profileID
+            ]);
+        }
+
         $writer->write([
-            Schema::CBC . 'UBLVersionID' => $this->UBLVersionID,
-            Schema::CBC . 'CustomizationID' => $this->customizationID,
-            Schema::CBC . 'ID' => $this->id
+            Schema::CBC . 'ID' => $this->id,
+            //Schema::CBC . 'UBLVersionID' => $this->UBLVersionID,
+            //Schema::CBC . 'CustomizationID' => $this->customizationID,
         ]);
+
+        if ($this->UUID !== null) {
+            $writer->write([
+                Schema::CBC . 'UUID' => $this->UUID
+            ]);
+        }
 
         if ($this->copyIndicator !== null) {
             $writer->write([
@@ -615,6 +674,12 @@ class Invoice implements XmlSerializable
         $writer->write([
             Schema::CBC . 'IssueDate' => $this->issueDate->format('Y-m-d'),
         ]);
+
+        if ($this->issueTime !== null) {
+            $writer->write([
+                Schema::CBC . 'IssueTime' => $this->issueTime->format('H:i:s')
+            ]);
+        }
 
         if ($this->dueDate !== null) {
             $writer->write([
@@ -630,21 +695,40 @@ class Invoice implements XmlSerializable
             ]);
         }
 
+        $writer->write([
+            Schema::CBC . 'DocumentCurrencyCode' => $this->documentCurrencyCode,
+        ]);
+
+        if ($this->taxCurrencyCode !== null) {
+            $writer->write([
+                Schema::CBC . 'TaxCurrencyCode' => $this->taxCurrencyCode
+            ]);
+        }
+
         if ($this->note !== null) {
             $writer->write([
                 Schema::CBC . 'Note' => $this->note
             ]);
         }
 
+        if($this->additionalDocumentReferences !== null) {
+            foreach ($this->additionalDocumentReferences as $docReference) {
+                $writer->write([
+                    Schema::CAC . 'AdditionalDocumentReference' => $docReference]);
+            }
+        }
+
+        if($this->signature !== null) {
+            $writer->write([
+                Schema::CAC . 'Signature' => $this->signature
+            ]);
+        } 
+
         if ($this->taxPointDate !== null) {
             $writer->write([
                 Schema::CBC . 'TaxPointDate' => $this->taxPointDate->format('Y-m-d')
             ]);
         }
-
-        $writer->write([
-            Schema::CBC . 'DocumentCurrencyCode' => $this->documentCurrencyCode,
-        ]);
 
         if ($this->accountingCostCode !== null) {
             $writer->write([
@@ -737,24 +821,6 @@ class Invoice implements XmlSerializable
             }
         }
 
-        if ($this->UUID !== null) {
-            $writer->write([
-                Schema::CBC . 'UUID' => $this->UUID
-            ]);
-        }
-
-        if ($this->taxCurrencyCode !== null) {
-            $writer->write([
-                Schema::CBC . 'TaxCurrencyCode' => $this->taxCurrencyCode
-            ]);
-        }
-
-        if ($this->profileID !== null) {
-            $writer->write([
-                Schema::CBC . 'ProfileID' => $this->profileID
-            ]);
-        }
-
         $writer->write([
             Schema::CAC . 'LegalMonetaryTotal' => $this->legalMonetaryTotal
         ]);
@@ -764,12 +830,6 @@ class Invoice implements XmlSerializable
                 Schema::CAC . 'InvoiceLine' => $invoiceLine
             ]);
         }
-
-        if($this->additionalDocumentReferences !== null) {
-            foreach ($this->additionalDocumentReferences as $docReference) {
-                $writer->write([
-                    Schema::CAC . 'AdditionalDocumentReference' => $docReference]);
-            }
-        }
+        
     }
 }

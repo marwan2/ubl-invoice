@@ -15,6 +15,7 @@ class Address implements XmlSerializable
     private $country;
     private $plotIdentification;
     private $district;
+    private $countrySubentity;
 
     /**
      * @return string
@@ -162,6 +163,16 @@ class Address implements XmlSerializable
     }
 
     /**
+     * @param countrySubentity $subentity
+     * @return Address
+     */
+    public function setCountrySubentity(String $subentity): Address
+    {
+        $this->countrySubentity = $subentity;
+        return $this;
+    }
+
+    /**
      * The xmlSerialize method is called during xml writing.
      *
      * @param Writer $writer
@@ -184,6 +195,16 @@ class Address implements XmlSerializable
                 Schema::CBC . 'BuildingNumber' => $this->buildingNumber
             ]);
         }
+        if ($this->plotIdentification !== null) {
+            $writer->write([
+                Schema::CBC . 'PlotIdentification' => $this->plotIdentification,
+            ]);
+        }
+        if ($this->district !== null) {
+            $writer->write([
+                Schema::CBC . 'CitySubdivisionName' => $this->district,
+            ]);
+        }
         if ($this->cityName !== null) {
             $writer->write([
                 Schema::CBC . 'CityName' => $this->cityName,
@@ -194,14 +215,9 @@ class Address implements XmlSerializable
                 Schema::CBC . 'PostalZone' => $this->postalZone,
             ]);
         }
-        if ($this->plotIdentification !== null) {
+        if ($this->countrySubentity !== null) {
             $writer->write([
-                Schema::CBC . 'PlotIdentification' => $this->plotIdentification,
-            ]);
-        }
-        if ($this->district !== null) {
-            $writer->write([
-                Schema::CBC . 'CitySubdivisionName' => $this->district,
+                Schema::CBC . 'CountrySubentity' => $this->countrySubentity,
             ]);
         }
         if ($this->country !== null) {

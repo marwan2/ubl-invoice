@@ -15,6 +15,7 @@ class Party implements XmlSerializable
     private $contact;
     private $partyTaxScheme;
     private $legalEntity;
+    private $partyIdentification;
 
     /**
      * @return string
@@ -37,28 +38,18 @@ class Party implements XmlSerializable
     /**
      * @return string
      */
-    public function getPartyIdentificationId(): ?string
+    public function getPartyIdentification(): ?string
     {
-        return $this->partyIdentificationId;
+        return $this->partyIdentification;
     }
 
     /**
      * @param string $partyIdentificationId
      * @return Party
      */
-    public function setPartyIdentificationId(?string $partyIdentificationId): Party
+    public function setPartyIdentification(?PartyIdentification $partyIdentification): Party
     {
-        $this->partyIdentificationId = $partyIdentificationId;
-        return $this;
-    }
-
-    /**
-     * @param string $partyIdentificationSchemeId
-     * @return Party
-     */
-    public function setPartyIdentificationSchemeId(?string $partyIdentificationSchemeId): Party
-    {
-        $this->partyIdentificationSchemeId = $partyIdentificationSchemeId;
+        $this->partyIdentification = $partyIdentification;
         return $this;
     }
 
@@ -160,15 +151,9 @@ class Party implements XmlSerializable
      */
     public function xmlSerialize(Writer $writer)
     {
-        if ($this->partyIdentificationId !== null) {
+        if ($this->partyIdentification !== null) {
             $writer->write([
-                Schema::CAC . 'PartyIdentification' => [
-                    'name' => Schema::CBC . 'ID',
-                    'value' => $this->partyIdentificationId,
-                    'attributes' => [
-                        'schemeID' => $this->partyIdentificationSchemeId ?? 'OTH'
-                    ]
-                ],
+                Schema::CAC . 'PartyIdentification' => $this->partyIdentification
             ]);
         }
 
