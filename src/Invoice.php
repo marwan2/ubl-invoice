@@ -579,7 +579,7 @@ class Invoice implements XmlSerializable
      * @param UBLExtensions $extensions
      * @return Invoice
      */
-    public function setExtensions(Extensions\UBLExtensions $extensions): Invoice
+    public function setExtensions(String $extensions): Invoice
     {
         $this->extensions = $extensions;
         return $this;
@@ -643,7 +643,7 @@ class Invoice implements XmlSerializable
 
         if ($this->extensions !== null) {
             $writer->write([
-                Schema::EXT . 'Extensions' => $this->extensions
+                Schema::EXT . 'UBLExtensions' => $this->extensions
             ]);
         }
 
