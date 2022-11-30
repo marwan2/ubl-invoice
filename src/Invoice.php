@@ -45,6 +45,7 @@ class Invoice implements XmlSerializable
     private $profileID = 'reporting:1.0';
     private $extensions;
     private $signature;
+    private $billingReference;
 
     /**
      * @return string
@@ -596,6 +597,16 @@ class Invoice implements XmlSerializable
     }
 
     /**
+     * @param BillingReference $billingReference
+     * @return Invoice
+     */
+    public function setBillingReference(BillingReference $billingReference): Invoice
+    {
+        $this->billingReference = $billingReference;
+        return $this;
+    }
+
+    /**
      * The validate function that is called during xml writing to valid the data of the object.
      *
      * @return void
@@ -829,6 +840,11 @@ class Invoice implements XmlSerializable
             $writer->write([
                 Schema::CAC . 'InvoiceLine' => $invoiceLine
             ]);
+        }
+
+        if($this->billingReference !== null) {
+            $writer->write([
+                Schema::CAC . 'BillingReference' => $this->billingReference]);
         }
         
     }
