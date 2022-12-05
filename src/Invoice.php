@@ -722,6 +722,11 @@ class Invoice implements XmlSerializable
             ]);
         }
 
+        if($this->billingReference !== null) {
+            $writer->write([
+                Schema::CAC . 'BillingReference' => $this->billingReference]);
+        }
+
         if($this->additionalDocumentReferences !== null) {
             foreach ($this->additionalDocumentReferences as $docReference) {
                 $writer->write([
@@ -840,11 +845,6 @@ class Invoice implements XmlSerializable
             $writer->write([
                 Schema::CAC . 'InvoiceLine' => $invoiceLine
             ]);
-        }
-
-        if($this->billingReference !== null) {
-            $writer->write([
-                Schema::CAC . 'BillingReference' => $this->billingReference]);
         }
         
     }
