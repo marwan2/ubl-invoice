@@ -79,7 +79,7 @@ class Price implements XmlSerializable
      * @param AllowanceCharge[] $allowanceCharge
      * @return InvoiceLine
      */
-    public function setAllowanceCharge(AllowanceCharge $allowanceCharge): InvoiceLine
+    public function setAllowanceCharge(AllowanceCharge $allowanceCharge): Price
     {
         $this->allowanceCharge = $allowanceCharge;
         return $this;
