@@ -12,7 +12,8 @@ class TaxCategory implements XmlSerializable
     private $id;
     private $idAttributes = [
         'schemeID' => TaxCategory::UNCL5305,
-        'schemeName' => 'Duty or tax or fee category'
+        'schemeName' => 'Duty or tax or fee category',
+        'schemeAgencyID' => TaxCategory::SCHEMEAGENCYID,
     ];
     private $name;
     private $percent;
@@ -20,7 +21,8 @@ class TaxCategory implements XmlSerializable
     private $taxExemptionReason;
     private $taxExemptionReasonCode;
 
-    public const UNCL5305 = 'UNCL5305';
+    public const UNCL5305 = 'UN/ECE 5305';
+    public const SCHEMEAGENCYID = '6';
 
     /**
      * @return string
@@ -205,7 +207,9 @@ class TaxCategory implements XmlSerializable
         }
 
         if ($this->taxScheme !== null) {
-            $writer->write([Schema::CAC . 'TaxScheme' => $this->taxScheme]);
+            $writer->write([
+                Schema::CAC . 'TaxScheme' => $this->taxScheme
+            ]);
         } else {
             $writer->write([
                 Schema::CAC . 'TaxScheme' => null,

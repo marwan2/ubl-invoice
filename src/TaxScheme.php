@@ -10,6 +10,7 @@ class TaxScheme implements XmlSerializable
     private $id;
     private $taxTypeCode;
     private $name;
+    private $attributes;
 
     /**
      * @return string
@@ -65,11 +66,39 @@ class TaxScheme implements XmlSerializable
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getAttributes(): ?array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param array $attributes
+     * @return TaxScheme
+     */
+    public function setAttributes(?array $attributes)
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
     public function xmlSerialize(Writer $writer)
     {
-        $writer->write([
-            Schema::CBC . 'ID' => $this->id
-        ]);
+
+        if($this->getAttributes()) {
+            $writer->write([
+                'name' => Schema::CBC . 'ID',
+                'value' => $this->getId(),
+                'attributes' => $this->getAttributes(),
+            ]);
+        } else {
+            $writer->write([
+                Schema::CBC . 'ID' => $this->id
+            ]);
+        }
+
         if ($this->taxTypeCode !== null) {
             $writer->write([
                 Schema::CBC . 'TaxTypeCode' => $this->taxTypeCode
