@@ -11,6 +11,7 @@ class LegalMonetaryTotal implements XmlSerializable
     private $taxExclusiveAmount;
     private $taxInclusiveAmount;
     private $allowanceTotalAmount = 0;
+    private $payableRoundingAmount = 0;
     private $payableAmount;
 
     /**
@@ -70,6 +71,24 @@ class LegalMonetaryTotal implements XmlSerializable
     /**
      * @return float
      */
+    public function getPayableRoundingAmount(): ?float
+    {
+        return $this->payableRoundingAmount;
+    }
+
+    /**
+     * @param float $taxInclusiveAmount
+     * @return LegalMonetaryTotal
+     */
+    public function setPayableRoundingAmount(?float $payableRoundingAmount): LegalMonetaryTotal
+    {
+        $this->payableRoundingAmount = $payableRoundingAmount;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
     public function getAllowanceTotalAmount(): ?float
     {
         return $this->allowanceTotalAmount;
@@ -118,7 +137,6 @@ class LegalMonetaryTotal implements XmlSerializable
                 'attributes' => [
                     'currencyID' => Generator::$currencyID
                 ]
-
             ],
             [
                 'name' => Schema::CBC . 'TaxExclusiveAmount',
@@ -126,7 +144,6 @@ class LegalMonetaryTotal implements XmlSerializable
                 'attributes' => [
                     'currencyID' => Generator::$currencyID
                 ]
-
             ],
             [
                 'name' => Schema::CBC . 'TaxInclusiveAmount',
@@ -134,7 +151,6 @@ class LegalMonetaryTotal implements XmlSerializable
                 'attributes' => [
                     'currencyID' => Generator::$currencyID
                 ]
-
             ],
             [
                 'name' => Schema::CBC . 'AllowanceTotalAmount',
@@ -142,7 +158,13 @@ class LegalMonetaryTotal implements XmlSerializable
                 'attributes' => [
                     'currencyID' => Generator::$currencyID
                 ]
-
+            ],
+            [
+                'name' => Schema::CBC . 'PayableRoundingAmount',
+                'value' => number_format($this->payableRoundingAmount, 2, '.', ''),
+                'attributes' => [
+                    'currencyID' => Generator::$currencyID
+                ]
             ],
             [
                 'name' => Schema::CBC . 'PayableAmount',
