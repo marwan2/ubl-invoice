@@ -124,14 +124,24 @@ class Attachment implements XmlSerializable
             $mimeType = 'text/plain';
         }
 
-        $writer->write([
-            'name' => Schema::CBC . 'EmbeddedDocumentBinaryObject',
-            'value' => $fileContents,
-            'attributes' => [
-                'mimeCode' => $mimeType,
-                'filename' => $fileName
-            ]
-        ]);
+        if($fileName) {
+            $writer->write([
+                'name' => Schema::CBC . 'EmbeddedDocumentBinaryObject',
+                'value' => $fileContents,
+                'attributes' => [
+                    'mimeCode' => $mimeType,
+                    'filename' => $fileName
+                ]
+            ]);
+        } else {
+            $writer->write([
+                'name' => Schema::CBC . 'EmbeddedDocumentBinaryObject',
+                'value' => $fileContents,
+                'attributes' => [
+                    'mimeCode' => $mimeType,
+                ]
+            ]);
+        }
 
         if($this->externalReference !== null) {
             $writer->write(['externalReference'=> $this->externalReference]);
