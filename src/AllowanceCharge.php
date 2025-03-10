@@ -35,18 +35,18 @@ class AllowanceCharge implements XmlSerializable
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getAllowanceChargeReasonCode(): ?int
+    public function getAllowanceChargeReasonCode(): ?string
     {
         return $this->allowanceChargeReasonCode;
     }
 
     /**
-     * @param int $allowanceChargeReasonCode
+     * @param string $allowanceChargeReasonCode
      * @return AllowanceCharge
      */
-    public function setAllowanceChargeReasonCode(?int $allowanceChargeReasonCode): AllowanceCharge
+    public function setAllowanceChargeReasonCode(?string $allowanceChargeReasonCode): AllowanceCharge
     {
         $this->allowanceChargeReasonCode = $allowanceChargeReasonCode;
         return $this;
