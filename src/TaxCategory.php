@@ -12,7 +12,7 @@ class TaxCategory implements XmlSerializable
     private $id;
     private $idAttributes = [
         'schemeID' => TaxCategory::UNCL5305,
-        'schemeName' => 'Duty or tax or fee category',
+        //'schemeName' => 'Duty or tax or fee category',
         'schemeAgencyID' => TaxCategory::SCHEMEAGENCYID,
     ];
     private $name;
