@@ -171,27 +171,45 @@ class LegalMonetaryTotal implements XmlSerializable
                     'currencyID' => Generator::$currencyID
                 ]
             ],
-            [
-                'name' => Schema::CBC . 'AllowanceTotalAmount',
-                'value' => number_format($this->allowanceTotalAmount, 2, '.', ''),
-                'attributes' => [
-                    'currencyID' => Generator::$currencyID
-                ]
-            ],
-            [
-                'name' => Schema::CBC . 'ChargeTotalAmount',
-                'value' => number_format($this->chargeTotalAmount, 2, '.', ''),
-                'attributes' => [
-                    'currencyID' => Generator::$currencyID
-                ]
-            ],
-            [
-                'name' => Schema::CBC . 'PayableRoundingAmount',
-                'value' => number_format($this->payableRoundingAmount, 2, '.', ''),
-                'attributes' => [
-                    'currencyID' => Generator::$currencyID
-                ]
-            ],
+        ]);
+
+        if($this->allowanceTotalAmount) {
+            $writer->write([
+                [
+                    'name' => Schema::CBC . 'AllowanceTotalAmount',
+                    'value' => number_format($this->allowanceTotalAmount, 2, '.', ''),
+                    'attributes' => [
+                        'currencyID' => Generator::$currencyID
+                    ]
+                ],
+            ]);
+        }
+
+        if($this->chargeTotalAmount) {
+            $writer->write([
+                [
+                    'name' => Schema::CBC . 'ChargeTotalAmount',
+                    'value' => number_format($this->chargeTotalAmount, 2, '.', ''),
+                    'attributes' => [
+                        'currencyID' => Generator::$currencyID
+                    ]
+                ],
+            ]);
+        }
+
+        if($this->payableRoundingAmount) {
+            $writer->write([
+                [
+                    'name' => Schema::CBC . 'PayableRoundingAmount',
+                    'value' => number_format($this->payableRoundingAmount, 2, '.', ''),
+                    'attributes' => [
+                        'currencyID' => Generator::$currencyID
+                    ]
+                ],
+            ]);
+        }
+
+        $writer->write([
             [
                 'name' => Schema::CBC . 'PayableAmount',
                 'value' => number_format($this->payableAmount, 2, '.', ''),
