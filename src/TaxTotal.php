@@ -123,7 +123,7 @@ class TaxTotal implements XmlSerializable
             ],
         ]);
 
-        if($this->roundingAmount) {
+        if($this->roundingAmount !== null && $this->roundingAmount !== '') {
             $writer->write([
                 [
                     'name' => Schema::CBC . 'RoundingAmount',
